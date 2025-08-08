@@ -1,3 +1,4 @@
+// Données simulées
 const resultats = [
   {
     numero_table: "2025BJ00123",
@@ -11,25 +12,45 @@ const resultats = [
     nom: "Aminata S.",
     examen: "BEPC",
     moyenne: 12.00,
-    mention: "Assez bien"
+    mention: "Passable"
+  },
+  {
+    numero_table: "2025BJ00125",
+    nom: "Candidat C",
+    examen: "BAC",
+    moyenne: 8.75,
+    mention: "Ajourné"
   }
 ];
 
-document.getElementById("searchForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const numero = document.getElementById("numeroTable").value.trim();
-  const resultat = resultats.find(r => r.numero_table === numero);
+// Fonction de recherche
+function rechercherResultat() {
+  const numeroSaisi = document.getElementById("numeroTable").value.trim();
+  const resultat = resultats.find(r => r.numero_table === numeroSaisi);
 
-  const div = document.getElementById("resultat");
+  const zoneAffichage = document.getElementById("resultat");
+
   if (resultat) {
-    div.innerHTML = `
-      <h2>Résultat trouvé 🎉</h2>
-      <p><strong>Nom :</strong> ${resultat.nom}</p>
-      <p><strong>Examen :</strong> ${resultat.examen}</p>
-      <p><strong>Moyenne :</strong> ${resultat.moyenne}</p>
-      <p><strong>Mention :</strong> ${resultat.mention}</p>
-    `;
+    let message = "";
+
+    if (resultat.moyenne < 10) {
+      message = `
+        <p><strong>${resultat.nom}</strong> — ${resultat.examen}</p>
+        <p>Moyenne : ${resultat.moyenne}/20</p>
+        <p style="color: red;">Mention : ${resultat.mention} ❌</p>
+        <p>Désolé, vous n'avez pas été admis.</p>
+      `;
+    } else {
+      message = `
+        <p><strong>${resultat.nom}</strong> — ${resultat.examen}</p>
+        <p>Moyenne : ${resultat.moyenne}/20</p>
+        <p style="color: green;">Mention : ${resultat.mention} ✅</p>
+        <p>Félicitations, vous êtes admis !</p>
+      `;
+    }
+
+    zoneAffichage.innerHTML = message;
   } else {
-    div.innerHTML = `<p style="color:red;">Aucun résultat trouvé pour ce numéro.</p>`;
+    zoneAffichage.innerHTML = `<p style="color: orange;">Aucun résultat trouvé pour ce numéro de table.</p>`;
   }
-});
+}
