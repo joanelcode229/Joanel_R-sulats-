@@ -1,56 +1,37 @@
-// Données simulées
-const resultats = [
-  {
-    numero_table: "2025BJ00123",
-    nom: "Derick K.",
-    examen: "BAC",
-    moyenne: 14.25,
-    mention: "Bien"
-  },
-  {
-    numero_table: "2025BJ00124",
-    nom: "Aminata S.",
-    examen: "BEPC",
-    moyenne: 12.00,
-    mention: "Passable"
-  },
-  {
-    numero_table: "2025BJ00125",
-    nom: "Candidat C",
-    examen: "BAC",
-    moyenne: 8.75,
-    mention: "Ajourné"
-  }
-];
+// script.js
+const candidats = {
+  "2025A001": { nom: "Derick K.", examen: "BEPC", moyenne: 12.5, mention: "Admis" },
+  "2025A002": { nom: "Fatou S.", examen: "BEPC", moyenne: 9.75, mention: "Ajourné" }
+};
 
-// Fonction de recherche
-function rechercherResultat() {
-  const numeroSaisi = document.getElementById("numeroTable").value.trim();
-  const resultat = resultats.find(r => r.numero_table === numeroSaisi);
+function getMentionClass(mention) {
+  if (mention === "Admis") return "admis";
+  if (mention === "Ajourné") return "ajourne";
+  return "inconnu";
+}
 
-  const zoneAffichage = document.getElementById("resultat");
+function searchResult() {
+  const input = document.getElementById("searchInput").value.trim();
+  const resultDiv = document.getElementById("resultDisplay");
+  resultDiv.innerHTML = "";
 
-  if (resultat) {
-    let message = "";
+  const data = candidats[input];
 
-    if (resultat.moyenne < 10) {
-      message = `
-        <p><strong>${resultat.nom}</strong> — ${resultat.examen}</p>
-        <p>Moyenne : ${resultat.moyenne}/20</p>
-        <p style="color: red;">Mention : ${resultat.mention} ❌</p>
-        <p>Désolé, vous n'avez pas été admis.</p>
-      `;
-    } else {
-      message = `
-        <p><strong>${resultat.nom}</strong> — ${resultat.examen}</p>
-        <p>Moyenne : ${resultat.moyenne}/20</p>
-        <p style="color: green;">Mention : ${resultat.mention} ✅</p>
-        <p>Félicitations, vous êtes admis !</p>
-      `;
-    }
-
-    zoneAffichage.innerHTML = message;
+  if (data) {
+    const mentionClass = getMentionClass(data.mention);
+    resultDiv.innerHTML = `
+      <div class="result-card">
+        <p><strong>Nom :</strong> ${data.nom}</p>
+        <p><strong>Examen :</strong> ${data.examen}</p>
+        <p><strong>Moyenne :</strong> ${data.moyenne}</p>
+        <p class="mention ${mentionClass}">Mention : ${data.mention}</p>
+      </div>
+    `;
   } else {
-    zoneAffichage.innerHTML = `<p style="color: orange;">Aucun résultat trouvé pour ce numéro de table.</p>`;
+    resultDiv.innerHTML = `
+      <div class="result-card">
+        <p class="mention inconnu">⚠️ Numéro non trouvé</p>
+      </div>
+    `;
   }
 }
